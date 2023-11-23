@@ -8,52 +8,12 @@
 
     <h5>Class:</h5>
     <p>{{class}}</p>
-    <table>
-        <tr>
-            <th>Name</th>
-            <th>Price</th>
-            <th>Description</th>
-            <th>Date Added</th>
-        </tr>
     
-        {% comment %} Berikut cara memperlihatkan data produk di bawah baris ini {% endcomment %}
-    
-        {% for product in products %}
-            <tr>
-                <td>{{product.name}}</td>
-                <td>{{product.price}}</td>
-                <td>{{product.description}}</td>
-                <td>{{product.date_added}}</td>
-                <td>
-                    <a href="{% url 'main:edit_product' product.pk %}">
-                        <button>
-                            Edit
-                        </button>
-                    </a>
-                    <a href="{% url 'main:delete_product' product.pk %}">
-                        <button>
-                            Delete
-                        </button>
-                    </a>
-                </td>
-            </tr>
-        {% endfor %}
-    </table>
     <table id="product_table"></table>
     
     <br />
-    
-    <a href="{% url 'main:create_product' %}">
-        <button>
-            Add New Product
-        </button>
-    </a>
 
-    <a href="{% url 'main:logout' %}">
-        <button>
-            Logout
-        </button>
-    </a>
+    
 
     <script>
         async function getProducts() {
@@ -75,11 +35,17 @@
                 <td>${item.fields.price}</td>
                 <td>${item.fields.description}</td>
                 <td>${item.fields.date_added}</td>
+                <td>
+                    <button class="btn btn-secondary" onclick="window.location.href='/edit-product/${item.pk}'">Edit</button>
+                    <button class="btn btn-danger" onclick="window.location.href='/delete/${item.pk}'">Delete</button>
+                </td>
             </tr>` 
             })
         
             document.getElementById("product_table").innerHTML = htmlString
         }
+
+        
 
         refreshProducts()
 
@@ -94,6 +60,8 @@
         }
         document.getElementById("button_add").onclick = addProduct
     </script>
+
+
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -121,11 +89,48 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     <button type="button" class="btn btn-primary" id="button_add" data-bs-dismiss="modal">Add Product</button>
+                    <table>
+                        <!-- <tr>
+                            <th>Name</th>
+                            <th>Price</th>
+                            <th>Description</th>
+                            <th>Date Added</th>
+                        </tr> -->
+                
+                        {% comment %} Berikut cara memperlihatkan data produk di bawah baris ini {% endcomment %}
+                
+                        {% for product in products %}
+                            <tr>
+                                <!-- <td>{{product.name}}</td>
+                                <td>{{product.price}}</td>
+                                <td>{{product.description}}</td>
+                                <td>{{product.date_added}}</td> -->
+                                <td>
+                                    <a>
+                                        <button type="button" class="btn btn-primary" id="openModalButton" onclick="window.location.href='edit-product/{{ product.id }}'">
+                                            Edit
+                                        </button>
+                                    </a>
+                                    <a>
+                                        <button type="button" class="btn btn-danger" id="openModalButton" onclick="window.location.href='delete/{{ product.id }}'">
+                                            Delete
+                                        </button>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
                 </div>
             </div>
         </div>
     </div>
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Add Product by AJAX</button>
+    
+    <a href="{% url 'main:logout' %}">
+        <button>
+            Logout
+        </button>
+    </a>
+    <button type="button" class="btn btn-primary" id="openModalButton" onclick="window.location.href='create-product'">Add New Product</button>
 
     <h5>Sesi terakhir login: {{ last_login }}</h5>
 {% endblock content %}
